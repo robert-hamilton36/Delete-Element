@@ -13,7 +13,7 @@ browser.contextMenus.create({
  */
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId == "remove-element") {
+  if (info.menuItemId == "delete-element") {
     browser.tabs.sendMessage(tab.id, {action: 'remove'})
   }
 })
