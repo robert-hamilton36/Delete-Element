@@ -30,7 +30,6 @@ browser.commands.onCommand.addListener((command) => {
       currentWindow: true,
       active: true
     }).then(tab => {
-      console.log(tab)
       browser.tabs.sendMessage(tab[0].id, {action: 'undo'})
     })
   }
