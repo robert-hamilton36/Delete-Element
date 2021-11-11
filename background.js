@@ -13,7 +13,21 @@ browser.contextMenus.create({
  */
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId == "remove-element") {
+  if (info.menuItemId == "delete-element") {
     browser.tabs.sendMessage(tab.id, {action: 'remove'})
+  }
+})
+
+browser.commands.onCommand.addListener((command) => {
+  console.log(command)
+  if (command === "undo") {
+    console.log('UNDOOOOO Background!!!!')
+    browser.tabs.query({
+      currentWindow: true,
+      active: true
+    }).then(tab => {
+      console.log(tab)
+      browser.tabs.sendMessage(tab[0].id, {action: 'undo'})
+    })
   }
 })

@@ -13,5 +13,11 @@
     }
   ],
 
-  "permissions": [ "contextMenus" ]
+  "permissions": [ "contextMenus" ],
+  "commands": {
+    "undo": {
+      "suggested_key": { "default": "Ctrl+Alt+Z" },
+      "description": "Undos deletion of element"
+    }
+  }
 }
