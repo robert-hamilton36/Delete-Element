@@ -18,10 +18,14 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
   }
 })
 
+/**
+ *  Listens for custom keyboard shortcuts
+ *  If shortcut is 'undo'
+ *  Finds current tab the webpage is in and sends undo message
+ */
+
 browser.commands.onCommand.addListener((command) => {
-  console.log(command)
   if (command === "undo") {
-    console.log('UNDOOOOO Background!!!!')
     browser.tabs.query({
       currentWindow: true,
       active: true
