@@ -1,3 +1,6 @@
+// Keeps track of whether there are any saved changes
+let saved = false
+
 /**
  * Creates context menu item
  */
@@ -9,12 +12,38 @@ browser.contextMenus.create({
 });
 
 /**
+ * Listens for messages from content-script
+ * 
+ * If the message is {saved: true}, add a context menu for undo
+ * If {saved: false}, remove the undo context menu
+ * 
+ * 
+ */
+
+browser.runtime.onMessage.addListener((request) => {
+  if (request.saved) {
+    browser.contextMenus.create({
+      id: "undo-deletion",
+      title: "Undo",
+      enabled: true,
+      contexts: ["all"],
+    });
+  } else if (!request.saved) {
+    browser.contextMenus.remove("undo-deletion")
+  }
+})
+
+/**
  * Listens for the correct context menu selection and sends message to content script
  */
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId == "delete-element") {
     browser.tabs.sendMessage(tab.id, {action: 'remove'})
+  } 
+
+  if (info.menuItemId == "undo-deletion") {
+    browser.tabs.sendMessage(tab.id, {action: 'undo'})
   }
 })
 

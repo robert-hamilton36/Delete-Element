@@ -14,9 +14,13 @@ document.addEventListener('contextmenu', (e) => {
  * Creates listener thats recieves any messages from the background script
  * Gets sent via context menu action
  * 
- * If the action is remove, adds target element and its original display style to array of savedChanges, set display to none to hide the content
+ * If the action is remove; 
+ *    adds target element and its original display style to array of savedChanges, set display to none to hide the content
+ *    sends message to background script that there is saved changes so show undo button
  * 
- * If the action is undo, removes last element hidden from savedChanges and sets that elements display to what it previously was
+ * If the action is undo; 
+ *    removes last element hidden from savedChanges and sets that elements display to what it previously was
+ *    if the savedChange array is empty, sends message to background script to disable undo button
  */
 
 browser.runtime.onMessage.addListener(async (request) => {
@@ -29,16 +33,23 @@ browser.runtime.onMessage.addListener(async (request) => {
 
       element.style.display = "none"
       element = null
+
+      browser.runtime.sendMessage({saved: true})
     } 
     catch (error) {
       console.log("Error at Action: Remove")
       console.log(error)
     }
   }
+  
   if(request.action === 'undo') {
     try {
       const { previousElement, display } = savedChanges.pop()
       previousElement.style.display = display
+
+      if (savedChanges.length === 0) {
+        browser.runtime.sendMessage({saved: false})
+      }
     }
     catch (error) {
       console.log("Error at Action: Undo")
