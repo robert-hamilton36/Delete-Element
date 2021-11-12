@@ -9,6 +9,9 @@ browser.contextMenus.create({
   id: "delete-element",
   title: "Delete Element",
   contexts: ["all"],
+  icons: {
+    "16": "icons/delete-element-16.png"
+  }
 });
 
 /**
@@ -27,6 +30,9 @@ browser.runtime.onMessage.addListener((request) => {
       title: "Undo",
       enabled: true,
       contexts: ["all"],
+      icons: {
+        "16": "icons/undo-element-16.png"
+      }
     });
   } else if (!request.saved) {
     browser.contextMenus.remove("undo-deletion")
