@@ -34,6 +34,10 @@ browser.runtime.onMessage.addListener(async (request) => {
       element.style.display = "none"
       element = null
 
+      if (document.body.style.overflow === 'hidden') {
+        document.body.style.setProperty('overflow', 'auto', 'important')
+      }
+
       browser.runtime.sendMessage({saved: true})
     } 
     catch (error) {
