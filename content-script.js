@@ -1,4 +1,7 @@
+// Keeps track of last element right clicked
 let element = null
+// Keeps track of the elements that have been hidden, and what the original display was
+// Array of objects
 let savedChanges = []
 
 /**
@@ -14,16 +17,23 @@ document.addEventListener('contextmenu', (e) => {
  * Creates listener thats recieves any messages from the background script
  * Gets sent via context menu action
  * 
- * If the action is remove; 
- *    adds target element and its original display style to array of savedChanges, set display to none to hide the content
- *    sends message to background script that there is saved changes so show undo button
- * 
  * If the action is undo; 
  *    removes last element hidden from savedChanges and sets that elements display to what it previously was
  *    if the savedChange array is empty, sends message to background script to disable undo button
  */
 
 browser.runtime.onMessage.addListener(async (request) => {
+
+  /**
+   * If the action is remove; 
+   *    adds target element and its original display style to array of savedChanges, 
+   *    set display to none to hide the content,
+   * 
+   *    some sites disable scrolling when a popup is displayed,
+   *    add check to reenable scrolling on the body element
+   * 
+   *    sends message to background script that there is saved changes so show undo button
+   */
   if(request.action === 'remove') {
     try {
       savedChanges.push({
@@ -33,18 +43,20 @@ browser.runtime.onMessage.addListener(async (request) => {
 
       element.style.display = "none"
       element = null
-
       if (document.body.style.overflow === 'hidden') {
         document.body.style.setProperty('overflow', 'auto', 'important')
       }
-
-      browser.runtime.sendMessage({saved: true})
     } 
     catch (error) {
       console.log("Error at Action: Remove")
       console.log(error)
     }
   }
+  /**
+   * If the action is undo; 
+   *    removes last element hidden from savedChanges and sets that elements display to what it previously was
+   *    if the savedChange array is empty, sends message to background script to disable undo button
+   */
   
   if(request.action === 'undo') {
     try {
