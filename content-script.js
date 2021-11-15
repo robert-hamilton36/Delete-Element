@@ -53,12 +53,12 @@ browser.runtime.onMessage.addListener(async (request) => {
     }
   }
   /**
-   * If the action is undo; 
+   * If the action is undo, and there is saved changes; 
    *    removes last element hidden from savedChanges and sets that elements display to what it previously was
    *    if the savedChange array is empty, sends message to background script to disable undo button
    */
   
-  if(request.action === 'undo') {
+  if(request.action === 'undo' && savedChanges.length > 0) {
     try {
       const { previousElement, display } = savedChanges.pop()
       previousElement.style.display = display
