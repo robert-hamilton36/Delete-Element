@@ -17,12 +17,24 @@
     "48": "icons/delete-element-48.png"
   },
 
+  "browser_action": {
+    "default_icon": "icons/delete-element-32.png",
+    "default_title": "Delete Elements",
+    "default_popup": "popup/settings.html"
+  },
 
-  "permissions": [ "contextMenus" ],
+  "permissions": [ "contextMenus", "storage" ],
   "commands": {
     "undo": {
       "suggested_key": { "default": "Ctrl+Alt+Z" },
       "description": "Undos deletion of element"
     }
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "addon@example.com"
+    }
   }
+  
 }
