@@ -34,7 +34,7 @@ const undoButton = document.getElementById('undo-button')
  */
   
 undoButton.addEventListener('click', (e) => {
-    browser.runtime.sendMessage({sendMessage: 'undo'})
+    browser.runtime.sendMessage({settingsSendAction: 'undo'})
   })
 
 /**
