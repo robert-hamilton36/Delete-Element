@@ -6,6 +6,7 @@
   "background": {
     "scripts": [ "background.js" ]
   },
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -17,12 +18,22 @@
     "48": "icons/delete-element-48.png"
   },
 
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "addon@example.com"
+    }
+  },
 
-  "permissions": [ "contextMenus" ],
+  "permissions": [ "contextMenus", "storage" ],
+
   "commands": {
     "undo": {
       "suggested_key": { "default": "Ctrl+Alt+Z" },
       "description": "Undos deletion of element"
     }
+  },
+
+  "options_ui": {
+    "page": "options/options.html"
   }
 }
