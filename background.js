@@ -1,34 +1,87 @@
+// Keeps track of whether contextMenu should be enabled, if there are changes made on current tab or not
+let contextMenuEnabled = false
+
+// Keeps track of tabs with changes saved, the key is the tab id, value is a boolean tabId: boolean
+let tabsSaved = {
+  
+}
+
 /**
- * Creates delete element context menu item
+ * Creates context menu items
  */
 
-browser.contextMenus.create({
+ browser.contextMenus.create({
   id: "delete-element",
   title: "Delete Element",
   contexts: ["all"],
   icons: {
-    "16": "icons/delete_element_16.png"
+    "16": "icons/delete-element-16.png"
+  }
+});
+
+browser.contextMenus.create({
+  id: "undo-deletion",
+  title: "Undo",
+  enabled: contextMenuEnabled,
+  contexts: ["all"],
+  icons: {
+    "16": "icons/undo-element-16.png"
+  }
+});
+
+/**
+ *  Function that updates undo context menus enabled status
+ *  and changes contextMenuEnabled status
+ *  to use whenever contextMenuEnabled is changed
+ */
+ const updateUndoContextMenuEnableStatus = (boolean) => {
+  contextMenuEnabled = boolean
+  browser.contextMenus.update("undo-deletion", {enabled: contextMenuEnabled})
+}
+
+/**
+ *  Sets listener on tab change,
+ *  checks whether active tab has changes saved in tabSaved object and changes contextMenuEnabled accordingly
+ */
+
+browser.tabs.onActivated.addListener((info) => {
+  if (tabsSaved[info.tabId]) {
+    updateUndoContextMenuEnableStatus(true)
+  } else {
+    updateUndoContextMenuEnableStatus(false)
+  }
+
+})
+
+/**
+ *  Sets listener for messages from content script,
+ *    request.saved false, remove tab from list of tabs with saved changes. From content-script
+ *    messages are sent when there are no longer any changes saved so context menu is disabled
+ */
+
+ browser.runtime.onMessage.addListener((request, messangeInfo) => {
+  if (request.saved === false) {
+    tabsSaved[messangeInfo.tab.id] = false
+    updateUndoContextMenuEnableStatus(false)
   }
 })
 
 /**
  * Listens for context menu selections and sends message to content script on which selection:
- *    On delete-element. sends remove message.
+ *    on delete element. sends remove message, adds current tab to object of tabs saved. Enables the undo button.
+ * 
+ *    on undo. sends undo message
  */
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId == "delete-element") {
     browser.tabs.sendMessage(tab.id, {action: 'remove'})
+    tabsSaved[tab.id] = true
+    updateUndoContextMenuEnableStatus(true)
   }
-})
 
-/**
- *  Sets listener for messages from content script,
- *  messages are sent when there are no longer any changes saved so context menu is disabled
- */
-
- browser.runtime.onMessage.addListener((request, messangeInfo) => {
-  if (request.saved === false) {
+  if (info.menuItemId == "undo-deletion") {
+    browser.tabs.sendMessage(tab.id, {action: 'undo'})
   }
 })
 

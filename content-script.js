@@ -48,20 +48,25 @@ document.addEventListener('contextmenu', (e) => {
       console.log(error)
     }
   }
-  /**
+/**
    * If the action is undo; 
    *    removes last element hidden from savedChanges and sets that elements display to what it previously was
+   *    if the savedChange array is empty, sends message to background script to disable undo button
    */
   
-  if(request.action === 'undo') {
-    try {
-      const { previousElement, display } = savedChanges.pop()
-      previousElement.style.display = display
-    }
-    catch (error) {
-      console.log("Error at Action: Undo")
-      console.log(error)
+ if(request.action === 'undo') {
+  try {
+    const { previousElement, display } = savedChanges.pop()
+    previousElement.style.display = display
+
+    if (savedChanges.length === 0) {
+      browser.runtime.sendMessage({saved: false})
     }
   }
+  catch (error) {
+    console.log("Error at Action: Undo")
+    console.log(error)
+  }
+}
 })
 
