@@ -1,7 +1,9 @@
+// Keeps track of last element right clicked
 let element = null
 
 /**
- * Every time the context menu is opened, (using right click), the html element the mouse was on is saved
+ * Every time the context menu is opened, (using right click), 
+ * the html element the mouse was on is saved, preparing for if delete element is selected from context menu
  */
 
 document.addEventListener('contextmenu', (e) => {
