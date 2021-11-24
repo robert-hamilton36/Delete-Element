@@ -19,6 +19,9 @@ browser.runtime.onMessage.addListener(request => {
   if(request.action === 'remove') {
     try {
       element.parentNode.removeChild(element)
+      if (document.body.style.overflow === 'hidden') {
+        document.body.style.setProperty('overflow', 'auto', 'important')
+      }
     } 
     catch (error) {
       console.log(error)
