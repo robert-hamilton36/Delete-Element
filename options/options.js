@@ -1,5 +1,7 @@
 const checkbox = document.getElementById('undoMenu')
 
+console.log(checkbox.checked)
+
 /**
  * Save and retrieve settings
  */
@@ -13,7 +15,6 @@ const checkbox = document.getElementById('undoMenu')
 const restoreOptions = () => {
   browser.storage.sync.get('checkStatus')
   .then(data => {
-    console.log(data)
     checkbox.checked = data.checkStatus
   })
 }
