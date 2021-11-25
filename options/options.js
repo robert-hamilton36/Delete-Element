@@ -15,7 +15,7 @@ const restoreOptions = () => {
   .then(data => {
     // this checks whether or not settings have been saved before.
     // if no settings have been saved before the options page has never been opened before, then the default is checked
-    if(data.checkStatus) {
+    if('checkStatus' in data) {
       checkbox.checked = data.checkStatus
     } else {
       checkbox.checked = true
