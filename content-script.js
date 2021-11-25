@@ -18,18 +18,21 @@ document.addEventListener('contextmenu', (e) => {
  * Creates listener thats recieves any messages from the background script
  * Gets sent via context menu action
  * 
+ * If the action is remove; 
+ *    adds target element and its original display style to array of savedChanges, 
+ *    set display to none to hide the content,
+ * 
+ *    some sites disable scrolling when a popup is displayed,
+ *    add check to reenable scrolling on the body element
+ * 
+ *
+ * If the action is undo; 
+ *    removes last element hidden from savedChanges and sets that elements display to what it previously was
+ *    if the savedChange array is empty, sends message to background script to disable undo button
  */
 
- browser.runtime.onMessage.addListener(async (request) => {
 
-  /**
-   * If the action is remove; 
-   *    adds target element and its original display style to array of savedChanges, 
-   *    set display to none to hide the content,
-   * 
-   *    some sites disable scrolling when a popup is displayed,
-   *    add check to reenable scrolling on the body element
-   */
+ browser.runtime.onMessage.addListener(async (request) => {
   if(request.action === 'remove') {
     try {
       savedChanges.push({
@@ -48,25 +51,20 @@ document.addEventListener('contextmenu', (e) => {
       console.log(error)
     }
   }
-/**
-   * If the action is undo; 
-   *    removes last element hidden from savedChanges and sets that elements display to what it previously was
-   *    if the savedChange array is empty, sends message to background script to disable undo button
-   */
-  
- if(request.action === 'undo') {
-  try {
-    const { previousElement, display } = savedChanges.pop()
-    previousElement.style.display = display
 
-    if (savedChanges.length === 0) {
-      browser.runtime.sendMessage({saved: false})
+ if(request.action === 'undo') {
+    try {
+      const { previousElement, display } = savedChanges.pop()
+      previousElement.style.display = display
+
+      if (savedChanges.length === 0) {
+        browser.runtime.sendMessage({saved: false})
+      }
+    }
+    catch (error) {
+      console.log("Error at Action: Undo")
+      console.log(error)
     }
   }
-  catch (error) {
-    console.log("Error at Action: Undo")
-    console.log(error)
-  }
-}
 })
 
