@@ -40,6 +40,12 @@ const removeContextMenu = () => {
 });
 
 /**
+ * Makes default setting undo shown in context menu
+ */
+
+ addUndoContextMenu()
+
+/**
  *  Function that updates undo context menus enabled status
  *  and changes contextMenuEnabled status
  *  to use whenever contextMenuEnabled is changed
