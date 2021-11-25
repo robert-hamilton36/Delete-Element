@@ -7,6 +7,26 @@ let tabsSaved = {
 }
 
 /**
+ *  Functions that add and remove the undo button from the context menu
+ */
+
+ const addUndoContextMenu = () => {
+  browser.contextMenus.create({
+    id: "undo-deletion",
+    title: "Undo",
+    enabled: contextMenuEnabled,
+    contexts: ["all"],
+    icons: {
+      "16": "icons/undo-element-16.png"
+    }
+  })
+}
+
+const removeContextMenu = () => {
+  browser.contextMenus.remove("undo-deletion")
+}
+
+/**
  * Creates context menu items
  */
 
@@ -16,16 +36,6 @@ let tabsSaved = {
   contexts: ["all"],
   icons: {
     "16": "icons/delete-element-16.png"
-  }
-});
-
-browser.contextMenus.create({
-  id: "undo-deletion",
-  title: "Undo",
-  enabled: contextMenuEnabled,
-  contexts: ["all"],
-  icons: {
-    "16": "icons/undo-element-16.png"
   }
 });
 
@@ -40,29 +50,78 @@ browser.contextMenus.create({
 }
 
 /**
- *  Sets listener on tab change,
+ *  Listener on tab change,
  *  checks whether active tab has changes saved in tabSaved object and changes contextMenuEnabled accordingly
  */
 
-browser.tabs.onActivated.addListener((info) => {
+const controlContextMenuOnTabSwitch = (info) => {
   if (tabsSaved[info.tabId]) {
     updateUndoContextMenuEnableStatus(true)
   } else {
     updateUndoContextMenuEnableStatus(false)
   }
 
-})
+}
+
+/**
+ *  Functions that add and removes the tab change listener
+ *    to use on recieving change setting message from pop up.
+ */
+
+ const removeContextMenuListeners = () => {
+  browser.tabs.onActivated.removeListener(controlContextMenuOnTabSwitch)
+}
+
+const addContextMenuListeners = () => {
+  browser.tabs.onActivated.addListener(controlContextMenuOnTabSwitch)
+}
+
+/**
+ *  Function that gets the info of the active tab, and sends it an undo message
+ */
+
+ const sendUndoMessage = () => {
+  browser.tabs.query({
+    currentWindow: true,
+    active: true
+  }).then(tab => {
+    browser.tabs.sendMessage(tab[0].id, {action: 'undo'})
+  })
+}
 
 /**
  *  Sets listener for messages from content script,
  *    request.saved false, remove tab from list of tabs with saved changes. From content-script
- *    messages are sent when there are no longer any changes saved so context menu is disabled
+ *      messages are sent when there are no longer any changes saved so context menu is disabled
+ * 
+ *    request.removeMenu removeContextMenu and tab change Listener. From pop-up
+ *      messages are sent when pop-up checkbox is changed
+ * 
+ *    request.removeMenu false addContextMenu and tab change Listener. From pop-up
+ *      messages are sent when pop-up checkbox is changed
+ * 
+ *    request.settingsSendAction == undo. Recieves messages from popup and undos last deletion. From pop-up
+ *      messages are sent when pop-up undo button is clicked
  */
 
  browser.runtime.onMessage.addListener((request, messangeInfo) => {
   if (request.saved === false) {
     tabsSaved[messangeInfo.tab.id] = false
     updateUndoContextMenuEnableStatus(false)
+  }
+
+  if (request.removeMenu) {
+    removeContextMenuListeners()
+    removeContextMenu()
+  }
+
+  if (request.removeMenu === false) {
+    addContextMenuListeners()
+    addUndoContextMenu()
+  }
+
+  if(request.settingsSendAction === 'undo') {
+    sendUndoMessage()
   }
 })
 
@@ -93,11 +152,6 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
  browser.commands.onCommand.addListener((command) => {
   if (command === "undo") {
-    browser.tabs.query({
-      currentWindow: true,
-      active: true
-    }).then(tab => {
-      browser.tabs.sendMessage(tab[0].id, {action: 'undo'})
-    })
+    sendUndoMessage()
   }
 })

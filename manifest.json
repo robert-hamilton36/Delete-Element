@@ -18,12 +18,24 @@
     "48": "icons/delete_element_48.png"
   },
 
-  "permissions": [ "contextMenus" ],
+  "permissions": [ "contextMenus", "storage" ],
   
   "commands": {
     "undo": {
       "suggested_key": { "default": "Ctrl+Alt+Z" },
       "description": "Undos deletion of element"
     }
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "todo@changeidforsavingsettingstostoragetosomethingpertinent.com"
+    }
+  },
+
+  "browser_action": {
+    "default_icon": "icons/delete_element_32.png",
+    "default_title": "Delete Elements",
+    "default_popup": "popup/settings.html"
   }
 }

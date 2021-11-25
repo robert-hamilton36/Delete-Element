@@ -1,0 +1,25 @@
+.container {
+  padding: 15px;
+}
+
+.header {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  font-size: small;
+}
+
+
+.undoButton {
+  cursor: pointer;
+  display: block;
+  color: #FFFFFF;
+  background: #000000;
+  line-height: 96px;
+  text-align: center;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.checkbox {
+  cursor: pointer;
+}
