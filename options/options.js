@@ -1,7 +1,5 @@
 const checkbox = document.getElementById('undoMenu')
 
-console.log(checkbox.checked)
-
 /**
  * Save and retrieve settings
  */
@@ -15,7 +13,13 @@ console.log(checkbox.checked)
 const restoreOptions = () => {
   browser.storage.sync.get('checkStatus')
   .then(data => {
-    checkbox.checked = data.checkStatus
+    // this checks whether or not settings have been saved before.
+    // if no settings have been saved before the options page has never been opened before, then the default is checked
+    if(data.checkStatus) {
+      checkbox.checked = data.checkStatus
+    } else {
+      checkbox.checked = true
+    }
   })
 }
 
