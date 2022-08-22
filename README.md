@@ -1,5 +1,7 @@
 # Delete-Element
-Firefox Web Extension to click and delete elements off a web page  
+Firefox Web Extension to click and delete elements off a web page
+
+[Install](https://addons.mozilla.org/firefox/downloads/file/3992591/ac0ae3f26ea440f28343-0.1pre.xpi)
   
 The different numbered branches contains different features for the extension.
 
@@ -7,10 +9,10 @@ The different numbered branches contains different features for the extension.
 Just a delete button from context menu
 
 - [2.UndoShortcut](https://github.com/robert-hamilton36/Delete-Element/tree/2.UndoShortcut):  
-Adds an undo function only with a shortcut 'Ctrl + Shift + Z'
+Adds an undo function only with a shortcut 'Ctrl + Alt + Z'
 
 - [3.UndoContextMenu](https://github.com/robert-hamilton36/Delete-Element/tree/3.UndoContextMenu):  
-Adds an undo button to the context menu. Along with the shortcut 'Ctrl + Shift + Z'
+Adds an undo button to the context menu. Along with the shortcut 'Ctrl + Alt + Z'
 This can make deleting cumbersome as you have to go through a sub-contextmenu to delete an element
 
 - [4.BrowserAction](https://github.com/robert-hamilton36/Delete-Element/tree/4.BrowserAction):  
