@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Delete Elements",
-  "version": "0pre1",
+  "version": "0.1pre",
 
   "background": {
     "scripts": [ "background.js" ]
