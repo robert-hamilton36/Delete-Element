@@ -1,7 +1,7 @@
 # Delete-Element
 Firefox Web Extension to click and delete elements off a web page
 
-[Install](https://addons.mozilla.org/firefox/downloads/file/3992591/ac0ae3f26ea440f28343-0.1pre.xpi)
+[Install](https://github.com/robert-hamilton36/Delete-Element/releases/download/v0.pre1/ac0ae3f26ea440f28343-0.1pre.xpi)
   
 The different numbered branches contains different features for the extension.
 
